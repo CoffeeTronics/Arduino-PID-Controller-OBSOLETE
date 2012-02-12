@@ -8,32 +8,21 @@
 
 uint8_t degree[8] = {0xc,0x12,0xc,0x0,0x0,0x0,0x0};
 
-int CS0 = 10;
-// CS pin on MAX6675
-int SO = 11;
-// SO pin of MAX6675
-int SCK = 12;
-// SCK pin of MAX6675
-int units = 0;
-// Units to readout temp (0 = ÀöF, 1 = ÀöC)
-float error = -20.0;
-// Temperature compensation error
-float temp_out = 0.0;
-// Temperature output varible
+int CS0 = 10;         // CS pin on MAX6675
+int SO = 11;          // SO pin of MAX6675
+int SCK = 12;         // SCK pin of MAX6675
+int units = 0;        // Units to readout temp (0 = ÀöF, 1 = ÀöC)
+float error = -20.0;  // Temperature compensation error
+float temp_out = 0.0; // Temperature output varible
 
 MAX6675 temp0(CS0, SO, SCK, units, error);
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-// set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27, 16, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 //Define Variables we'll be connecting to
-double Setpoint,
-Input,
-Output;
+double Setpoint, Input, Output;
 
-int intSetpoint = 0;
-//variable for displaying S: as an integer
-int intTemp = 0;
-// variable for displaying PV as an integer
+int intSetpoint = 0;  //variable for displaying S: as an integer
+int intTemp = 0;      // variable for displaying PV as an integer
 float Kp = 0.0;
 float Ki = 0.0;
 float Kd = 0.0;
@@ -44,34 +33,21 @@ PID myPID( & Input, &Output, &Setpoint, 400, 30, 10, DIRECT);
 int WindowSize = 5000;
 unsigned long windowStartTime;
 
-const int buttonPinLeft = 4;
-// pin for the Up button
-const int buttonPinRight = 5;
-// pin for the Down button
-const int buttonPinEsc = 3;
-// pin for the Esc button
-const int buttonPinEnter = 2;
-// pin for the Enter button
+const int buttonPinLeft = 4;   // pin for the Up button
+const int buttonPinRight = 5;  // pin for the Down button
+const int buttonPinEsc = 3;    // pin for the Esc button
+const int buttonPinEnter = 2;  // pin for the Enter button
 int lastButtonPushed = 0;
 
-int lastButtonEnterState = LOW;
-// the previous reading from the Enter input pin
-int lastButtonEscState = LOW;
-// the previous reading from the Esc input pin
-int lastButtonLeftState = LOW;
-// the previous reading from the Left input pin
-int lastButtonRightState = LOW;
-// the previous reading from the Right input pin
-long lastEnterDebounceTime = 0;
-// the last time the output pin was toggled
-long lastEscDebounceTime = 0;
-// the last time the output pin was toggled
-long lastLeftDebounceTime = 0;
-// the last time the output pin was toggled
-long lastRightDebounceTime = 0;
-// the last time the output pin was toggled
-long debounceDelay = 300;
-// the debounce time
+int lastButtonEnterState = LOW; // the previous reading from the Enter input pin
+int lastButtonEscState = LOW;   // the previous reading from the Esc input pin
+int lastButtonLeftState = LOW;  // the previous reading from the Left input pin
+int lastButtonRightState = LOW; // the previous reading from the Right input pin
+long lastEnterDebounceTime = 0; // the last time the output pin was toggled
+long lastEscDebounceTime = 0;   // the last time the output pin was toggled
+long lastLeftDebounceTime = 0;  // the last time the output pin was toggled
+long lastRightDebounceTime = 0; // the last time the output pin was toggled
+long debounceDelay = 300;       // the debounce time
 //Menu variables
 MenuBackend menu = MenuBackend(menuUsed, menuChanged);
 //initialize menuitems
@@ -140,11 +116,11 @@ MenuItem menuItem5SubItem10 = MenuItem("D10");
 
 void setup() {
     Serial.begin(9600);
-    lcd.init();
-    // initialize the lcd
+    lcd.init();   // initialize the lcd
     lcd.backlight();
     lcd.createChar(0, degree);
     lcd.setCursor(0, 0);
+    // Initial splash screen
     delay(500);
     lcd.print("Arduino ");
     delay(500);
@@ -155,7 +131,6 @@ void setup() {
     lcd.print("D");
     delay(500);
     lcd.setCursor(2, 1);
-    //Initial splash screen
     lcd.print("for espresso");
     delay(3000);
     lcd.clear();
@@ -165,8 +140,7 @@ void setup() {
     pinMode(buttonPinEnter, INPUT);
     pinMode(buttonPinEsc, INPUT);
 
-    windowStartTime = millis();
-    //initialize the variables we're linked to
+    windowStartTime = millis(); //initialize the variables we're linked to
     Setpoint = 228;
     Kp = 0.0;
     Ki = 0.0;
@@ -200,28 +174,19 @@ void setup() {
 }
 //end setup
 void loop() {
-    temp_out = temp0.read_temp(5);
-    // Read the temp 20 times and return the average value to the var
-    Serial.println(temp_out);
-    // Print the temperature to Serial
+    temp_out = temp0.read_temp(5);    // Read the temp 20 times and return the average value to the var
+    Serial.println(temp_out);         // Print the temperature to Serial
     //lcd.clear();
     lcd.setCursor(8, 0);
     // Printing the PV, or
-    lcd.print("P:");
-    //  Process Variable. This is
-    lcd.setCursor(10, 0);
-    // the measured value of temp.
-    intTemp = temp_out;
-    //convert display variable to integer
-    lcd.print(intTemp);
-    // print display variable
+    lcd.print("P:");      // Process Variable. This is
+    lcd.setCursor(10, 0); // the measured value of temp.
+    intTemp = temp_out;   // convert display variable to integer
+    lcd.print(intTemp);   // print display variable
     lcd.print(0, BYTE);
-    delay(1000);
-    // Wait one second
-    Input = temp_out;
-    // PID input is measured averaged temp
-    myPID.Compute();
-    //PID calculation
+    delay(1000);          // Wait one second
+    Input = temp_out;     // PID input is measured averaged temp
+    myPID.Compute();      // PID calculation
     /************************************************
     * turn the output pin on/off based on pid output
     ************************************************/
@@ -234,10 +199,8 @@ void loop() {
     if (Output > now - windowStartTime) digitalWrite(RelayPin, HIGH);
     else digitalWrite(RelayPin, LOW);
 
-    readButtons();
-    //I split button reading and navigation in two procedures because
-    navigateMenus();
-    //in some situations I want to use the button for other purpose (eg. to change some settings)
+    readButtons();    //I split button reading and navigation in two procedures because
+    navigateMenus();  //in some situations I want to use the button for other purpose (eg. to change some settings)
 }
 // end loop
 void menuChanged(MenuChangeEvent changed) {
@@ -336,14 +299,10 @@ void menuUsed(MenuUseEvent used) {
 void readButtons() {
     //read buttons status
     int reading;
-    int buttonEnterState = LOW;
-    // the current reading from the Enter input pin
-    int buttonEscState = LOW;
-    // the current reading from the input pin
-    int buttonLeftState = LOW;
-    // the current reading from the input pin
-    int buttonRightState = LOW;
-    // the current reading from the input pin
+    int buttonEnterState = LOW;    // the current reading from the Enter input pin
+    int buttonEscState = LOW;      // the current reading from the input pin
+    int buttonLeftState = LOW;     // the current reading from the input pin
+    int buttonRightState = LOW;    // the current reading from the input pin
     //Enter button
     // read the state of the switch into a local variable:
     reading = digitalRead(buttonPinEnter);
@@ -466,11 +425,9 @@ void navigateMenus() {
 
     switch (lastButtonPushed) {
     case buttonPinEnter:
-        if (! (currentMenu.moveDown())) {
-            //if the current menu has a child and has been pressed enter then menu navigate to item below
+        if (! (currentMenu.moveDown())) { // if the current menu has a child and has been pressed enter then menu navigate to item below
             menu.use();
-        } else {
-            //otherwise, if menu has no child and has been pressed enter the current menu is used
+        } else {                          // otherwise, if menu has no child and has been pressed enter the current menu is used
             menu.moveDown();
         }
         break;
