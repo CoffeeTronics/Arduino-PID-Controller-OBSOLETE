@@ -182,6 +182,9 @@ void loop() {
     lcd.print("P:");      // Process Variable. This is
     lcd.setCursor(10, 0); // the measured value of temp.
     intTemp = temp_out;   // convert display variable to integer
+    if(intTemp < 100) {
+      lcd.print(" ");
+    }
     lcd.print(intTemp);   // print display variable
     lcd.print(0, BYTE);
     delay(1000);          // Wait one second
