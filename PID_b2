@@ -145,9 +145,15 @@ void setup() {
     lcd.backlight();
     lcd.createChar(0, degree);
     lcd.setCursor(0, 0);
-    lcd.print("Arduino P");
+    delay(500);
+    lcd.print("Arduino ");
+    delay(500);
+    lcd.print("P");
+    delay(500);
     lcd.print("I");
+    delay(500);
     lcd.print("D");
+    delay(500);
     lcd.setCursor(2, 1);
     //Initial splash screen
     lcd.print("for espresso");
@@ -236,350 +242,95 @@ void loop() {
 // end loop
 void menuChanged(MenuChangeEvent changed) {
     MenuItem newMenuItem = changed.to;
-    char *newMenuItemName = newMenuItem.getName();
+    char* newMenuItemName = const_cast<char *>(newMenuItem.getName());
+    int newSetting = 0;
     
     //get the destination menu
     lcd.setCursor(0, 1);
+    
     //set the start position for lcd printing to the second row
-    if (newMenuItem.getName() == menu.getRoot().getName()) {
-        lcd.print("Menu            ");
-
-    } else if (newMenuItem.getName() == "SetPoint") {
-        lcd.print("Brew Temp   ");
-
-    } else if (newMenuItem.getName() == "Steam") {
-        lcd.print("Steam Temp  ");
-
-    } else if (newMenuItem.getName() == "Set P") {
-        printingSV();
-        lcd.setCursor(0, 1);
-        lcd.print("Set P");
-        lcd.setCursor(6, 1);
-        double val = myPID.GetKp();
-        int whole = (int) val;
-        double fraction = val - (double) whole;
-        int twodecplaces = (int)(100 * fraction);
-        lcd.print(whole);
-        //lcd.print('.');
-        //lcd.print(twodecplaces);
-
-    } else if (newMenuItem.getName() == "Set I") {
-        printingSV();
-        lcd.setCursor(0, 1);
-        lcd.print("Set I");
-        lcd.setCursor(6, 1);
-        double val = myPID.GetKi();
-        int whole = (int) val;
-        double fraction = val - (double) whole;
-        int twodecplaces = (int)(100 * fraction);
-        lcd.print(whole);
-        //lcd.print('.');
-        //lcd.print(twodecplaces);
-    } else if (newMenuItem.getName() == "Set D") {
-        printingSV();
-        lcd.setCursor(0, 1);
-        lcd.print("Set D");
-        lcd.setCursor(6, 1);
-        double val = myPID.GetKd();
-        int whole = (int) val;
-        double fraction = val - (double) whole;
-        int twodecplaces = (int)(100 * fraction);
-        lcd.print(whole);
-    } else if (newMenuItem.getName() == "B220") {
-        Setpoint = 220;
-        printingSV();
-    } else if (newMenuItem.getName() == "B221") {
-        Setpoint = 221;
-        printingSV();
-    } else if (newMenuItem.getName() == "B222") {
-        Setpoint = 222;
-        printingSV();
-    } else if (newMenuItem.getName() == "B223") {
-        Setpoint = 223;
-        printingSV();
-    } else if (newMenuItem.getName() == "B224") {
-        Setpoint = 224;
-        printingSV();
-    } else if (newMenuItem.getName() == "B225") {
-        Setpoint = 225;
-        printingSV();
-    } else if (newMenuItem.getName() == "B226") {
-        Setpoint = 226;
-        printingSV();
-    } else if (newMenuItem.getName() == "B227") {
-        Setpoint = 227;
-        printingSV();
-    } else if (newMenuItem.getName() == "B228") {
-        Setpoint = 228;
-        printingSV();
-    } else if (newMenuItem.getName() == "B229") {
-        Setpoint = 229;
-        printingSV();
-    } else if (newMenuItem.getName() == "B230") {
-        Setpoint = 230;
-        printingSV();
-    } else if (newMenuItem.getName() == "B231") {
-        Setpoint = 231;
-        printingSV();
-    } else if (newMenuItem.getName() == "B232") {
-        Setpoint = 232;
-        printingSV();
-    } else if (newMenuItem.getName() == "B233") {
-        Setpoint = 233;
-        printingSV();
-    } else if (newMenuItem.getName() == "B234") {
-        Setpoint = 234;
-        printingSV();
-    } else if (newMenuItem.getName() == "B235") {
-        Setpoint = 235;
-        printingSV();
-    } else if (newMenuItem.getName() == "B236") {
-        Setpoint = 236;
-        printingSV();
-    } else if (newMenuItem.getName() == "B237") {
-        Setpoint = 237;
-        printingSV();
-    } else if (newMenuItem.getName() == "B238") {
-        Setpoint = 238;
-        printingSV();
-    } else if (newMenuItem.getName() == "B239") {
-        Setpoint = 239;
-        printingSV();
-    } else if (newMenuItem.getName() == "B240") {
-        Setpoint = 240;
-        printingSV();
-
-    } else if (newMenuItem.getName() == "S285") {
-        Setpoint = 285;
-        printingSV();
-    } else if (newMenuItem.getName() == "S290") {
-        Setpoint = 290;
-        printingSV();
-    } else if (newMenuItem.getName() == "S295") {
-        Setpoint = 295;
-        printingSV();
-    } else if (newMenuItem.getName() == "S300") {
-        Setpoint = 300;
-        printingSV();
-
-    } else if (newMenuItem.getName() == "P1") {
-        Kp = 100;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=100 ");
-    } else if (newMenuItem.getName() == "P2") {
-        Kp = 200;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=200 ");
-    } else if (newMenuItem.getName() == "P3") {
-        Kp = 300;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=300");
-    } else if (newMenuItem.getName() == "P4") {
-        Kp = 400;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=400 ");
-    } else if (newMenuItem.getName() == "P5") {
-        Kp = 500;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=500 ");
-    } else if (newMenuItem.getName() == "P6") {
-        Kp = 600;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=600");
-    } else if (newMenuItem.getName() == "P7") {
-        Kp = 700;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=700");
-    } else if (newMenuItem.getName() == "P8") {
-        Kp = 800;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=800");
-    } else if (newMenuItem.getName() == "P9") {
-        Kp = 900;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=900");
-    } else if (newMenuItem.getName() == "P10") {
-        Kp = 1000;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("P=1000");
-
-    } else if (newMenuItem.getName() == "I1") {
-        Ki = 5;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=5");
-
-    } else if (newMenuItem.getName() == "I2") {
-        Ki = 10;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=10");
-
-    } else if (newMenuItem.getName() == "I3") {
-        Ki = 15;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=15");
-
-    } else if (newMenuItem.getName() == "I4") {
-        Ki = 20;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=20");
-
-    } else if (newMenuItem.getName() == "I5") {
-        Ki = 25;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=25");
-
-    } else if (newMenuItem.getName() == "I6") {
-        Ki = 30;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=30");
-
-    } else if (newMenuItem.getName() == "I7") {
-        Ki = 35;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=35");
-
-    } else if (newMenuItem.getName() == "I8") {
-        Ki = 40;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=40");
-
-    } else if (newMenuItem.getName() == "I9") {
-        Ki = 45;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=45");
-
-    } else if (newMenuItem.getName() == "I10") {
-        Ki = 50;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("I=50");
-
-
-    } else if (newMenuItem.getName() == "D1") {
-        Kd = 2;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=2");
-
-
-    } else if (newMenuItem.getName() == "D2") {
-        Kd = 4;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=4");
-
-    } else if (newMenuItem.getName() == "D3") {
-        Kd = 6;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=6");
-
-    } else if (newMenuItem.getName() == "D4") {
-        Kd = 8;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=8");
-
-    } else if (newMenuItem.getName() == "D5") {
-        Kd = 10;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=10");
-
-    } else if (newMenuItem.getName() == "D6") {
-        Kd = 12;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=12");
-
-    } else if (newMenuItem.getName() == "D7") {
-        Kd = 14;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=14");
-
-    } else if (newMenuItem.getName() == "D8") {
-        Kd = 16;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=16");
-
-    } else if (newMenuItem.getName() == "D9") {
-        Kd = 18;
-        myPID.SetTunings(Kp, Ki, Kd);
-
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=18");
-
-    } else if (newMenuItem.getName() == "D10") {
-        Kd = 20;
-        myPID.SetTunings(Kp, Ki, Kd);
-        printingSV();
-        lcd.setCursor(10, 1);
-        lcd.print("D=20");
-
-    }
+    if(newMenuItemName == menu.getRoot().getName()){
+      lcd.print("Menu            ");
+    } else if(newMenuItemName == "SetPoint"){
+      lcd.print("Brew Temp   "); 
+    } else if(newMenuItemName == "Steam"){
+      lcd.print("Steam Temp  "); 
+    } else if(newMenuItemName == "Set P"){
+      setPidValues(newMenuItemName, myPID.GetKp());
+    } else if(newMenuItemName == "Set I"){
+      setPidValues(newMenuItemName, myPID.GetKi());
+    } else if(newMenuItemName == "Set D"){
+      setPidValues(newMenuItemName, myPID.GetKd());
+    } else {
+      char action = newMenuItemName[0];
+      newMenuItemName[0] = '+';
+      newSetting = atol(newMenuItemName);
+    
+      if((action == 'B') || (action == 'S')) { // we're setting the brew OR steam temp
+        changeBrewTemperature(newSetting);
+      } else if(action == 'P') { // we're setting the Proportional value
+        // P is set to 10 times the entered value
+        setProportionalOfPID(newSetting * 10);
+      } else if(action == 'I') { // we're setting the Intergral value
+        // I is set to 5 times the entered value
+        setIntegralOfPID(newSetting * 5);
+      } else if(action == 'D') { // we're setting the Derivitave value
+        // D is set to twice the value entered
+        setDerivativeOfPID(newSetting * 2);
+      }
+   }
 }
+
+void setPidValues(char* menuName, double val) {
+  printingSV();
+  lcd.setCursor(0,1);
+  lcd.print(menuName); 
+  lcd.setCursor(6,1);
+  int whole = (int)val;
+  double fraction = val-(double)whole;
+  int twodecplaces = (int)(100*fraction);
+  lcd.print(whole);
+}
+
+void changeBrewTemperature(int newSetPoint) {
+  Setpoint = newSetPoint;
+  printingSV();
+}
+
+// For now, there's no separate setting for steam or brew so these functions are the same
+void changeSteamTemperature(int newSetPoint) {
+  changeBrewTemperature(newSetPoint);
+}
+
+void setProportionalOfPID(int newP) {
+  Kp = newP;  
+  myPID.SetTunings(Kp,Ki,Kd);
+  printingSV();
+  lcd.setCursor(10,1);
+  lcd.print("P= ");
+  lcd.print(Kp);
+}
+
+void setIntegralOfPID(int newI) {
+  Ki = newI;  
+  myPID.SetTunings(Kp,Ki,Kd);
+  printingSV();
+  lcd.setCursor(10,1);
+  lcd.print("I= ");
+  lcd.print(Ki);
+}
+
+void setDerivativeOfPID(int newD) {
+  Kd = newD;  
+  myPID.SetTunings(Kp,Ki,Kd);
+  printingSV();
+  lcd.setCursor(10,1);
+  lcd.print("D= ");
+  lcd.print(Kd);
+}
+
 void menuUsed(MenuUseEvent used) {
-    /*lcd.setCursor(0,0); 
-lcd.print("You used ");
-lcd.setCursor(0,1); */
-    //lcd.print(used.item.getName());
-    //delay(2000); //delay to allow message reading
-    //lcd.setCursor(0,0);
-    //lcd.print("SP");
-    // lcd.setCursor(2,0);
-    //lcd.print( Setpoint );
     menu.toRoot();
-    //back to Main
 }
 
 void readButtons() {
