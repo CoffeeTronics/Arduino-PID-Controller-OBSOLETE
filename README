@@ -1,1 +1,4 @@
-//More info to go here later
+PID_b1 is the code for beta unit 1
+PID_b2 is the code for beta unit 2
+
+This is due to an offset added to zero the units to their individual thermocouples
