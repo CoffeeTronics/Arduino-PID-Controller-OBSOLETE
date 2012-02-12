@@ -656,7 +656,7 @@ if ((millis() - lastLeftDebounceTime) > debounceDelay) {
 // whatever the reading is at, it's been there for longer
 // than the debounce delay, so take it as the actual current state:
 buttonLeftState = reading;
-lastLeftDebounceTime=millis();;
+lastLeftDebounceTime=millis();
 }
 
 // save the reading. Next time through the loop,
