@@ -6,16 +6,25 @@
 #include <PID_v1.h>
 #define RelayPin 7
 
-uint8_t degree[8]  = {0xc,0x12,0xc,0x0,0x0,0x0,0x0};
+uint8_t degree[8] = {0xc,0x12,0xc,0x0,0x0,0x0,0x0};
 
 int CS0 = 10;         // CS pin on MAX6675
 int SO = 11;          // SO pin of MAX6675
 int SCK = 12;         // SCK pin of MAX6675
-int units = 0;        // Units to readout temp (0 = °F, 1 = ÀöC)
-float error = -22.0;  // Temperature compensation error ***** This is the difference between PID B1 & PID B2 ******** 
+// int units = 0;     // Units to readout temp (0 = F, 1 = C)
+int units = 2;        // ** V2 MAX6675 units: (2 = F, 1 = C, 0 = raw val)
+float error = -4.0;  // Temperature compensation error
 float temp_out = 0.0; // Temperature output varible
+const int numberOfTemperatureReadings = 5;
+float temp[numberOfTemperatureReadings];
 
-MAX6675 temp0(CS0, SO, SCK, units, error);
+/*
+FOR V2 BETA of MAX6675
+2 = temp in deg F
+1 = temp in deg C
+0 = raw chip value 0-4095
+*/
+MAX6675 temp0(CS0, SO, SCK, units); // , error); v2 beta does not use error
 
 LiquidCrystal_I2C lcd(0x27, 16, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 //Define Variables we'll be connecting to
@@ -174,8 +183,31 @@ void setup() {
 }
 //end setup
 void loop() {
-    temp_out = temp0.read_temp(5);    // Read the temp 20 times and return the average value to the var
+    /*
+    MAX6675 V1 code
+    temp_out = temp0.read_temp(20);    // Read the temp 20 times and return the average value to the var
     Serial.println(temp_out);         // Print the temperature to Serial
+
+    lcd.setCursor(0, 1);
+    lcd.print(temp0.read_temp(1));
+    lcd.print(temp0.read_temp(10));
+    lcd.print(temp0.read_temp(100));
+    
+    delay(1000);
+    */
+    
+    temp_out = 0;
+    for(int i = 0; i < numberOfTemperatureReadings; i++) {
+      temp[i] = temp0.read_temp() + error;
+      Serial.println(temp[i]);
+      temp_out += temp[i];
+    }
+    Serial.println("--");
+    
+    temp_out = temp_out / numberOfTemperatureReadings;
+    Serial.println(temp_out);
+    Serial.println("-----");
+    
     //lcd.clear();
     lcd.setCursor(8, 0);
     // Printing the PV, or
